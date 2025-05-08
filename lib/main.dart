@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 import 'package:regina_app/core/router/app_router.dart';
 import 'package:regina_app/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized(); // necesario para async en main
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const ReginaApp());
+  runApp(const ProviderScope(child: ReginaApp()),);
 }
 
 class ReginaApp extends StatelessWidget {
