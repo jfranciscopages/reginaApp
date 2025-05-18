@@ -58,7 +58,9 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     final textTheme = Theme.of(context).textTheme;
     final services = ref.watch(serviceProvider);
     final service = services.firstWhere((s) => s.id == widget.serviceId);
-    final slotsAsync = ref.watch(slotsProvider(service.id));
+    final selectedDay = _selectedDay ?? _focusedDay;
+    final slotsAsync = ref.watch(slotsForDayProvider(selectedDay));
+
 
     return Scaffold(
       appBar: AppBar(title: const Text('Detalle del servicio')),

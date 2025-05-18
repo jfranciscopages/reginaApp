@@ -1,19 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-final slotsProvider = FutureProvider.family<List<DateTime>, String>((ref, serviceId) async {
-  // Simula un pequeño retraso como si fuera de red
-  await Future.delayed(const Duration(milliseconds: 300));
+final slotsForDayProvider = FutureProvider.family<List<DateTime>, DateTime>((ref, selectedDay) async {
+  final dayStart = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
+  final dayEnd = dayStart.add(const Duration(days: 1));
 
-  final now = DateTime.now();
-  final List<DateTime> slots = [];
+  final snapshot = await FirebaseFirestore.instance
+      .collection('slots')
+      .where('status', isEqualTo: 'available')
+      .where('datetime', isGreaterThanOrEqualTo: Timestamp.fromDate(dayStart))
+      .where('datetime', isLessThan: Timestamp.fromDate(dayEnd)) // NOT <=, sino <
+      .get();
 
-  // Generamos turnos genéricos para los próximos 7 días
-  for (int i = 0; i < 7; i++) {
-    final day = now.add(Duration(days: i));
-    for (int hour = 9; hour <= 17; hour += 2) {
-      slots.add(DateTime(day.year, day.month, day.day, hour));
-    }
-  }
+  final slots = snapshot.docs
+      .map((doc) => (doc.data()['datetime'] as Timestamp).toDate())
+      .toList();
 
+  slots.sort();
   return slots;
 });

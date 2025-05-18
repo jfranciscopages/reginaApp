@@ -13,7 +13,7 @@ Una app móvil hecha en Flutter para mostrar productos y servicios, y pedir turn
 
 - Flutter
 - go_router
-- Firebase (en camino)
+- Firebase 
 
 ## Setup
 
