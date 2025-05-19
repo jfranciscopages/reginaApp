@@ -54,7 +54,7 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _SectionHeader({super.key, required this.title, required this.onTap});
+  const _SectionHeader({required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class _SectionHeader extends StatelessWidget {
 class _HorizontalProductList extends StatelessWidget {
   final List<Product> products;
 
-  const _HorizontalProductList({super.key, required this.products});
+  const _HorizontalProductList({required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class _HorizontalProductList extends StatelessWidget {
 class _HorizontalServiceList extends StatelessWidget {
   final List<Service> services;
 
-  const _HorizontalServiceList({super.key, required this.services});
+  const _HorizontalServiceList({required this.services});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class _SquareCard extends StatelessWidget {
   final String? imageUrl;
   final String title;
 
-  const _SquareCard({super.key, required this.imageUrl, required this.title});
+  const _SquareCard({required this.imageUrl, required this.title});
 
   @override
   Widget build(BuildContext context) {

@@ -1,90 +1,129 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regina_app/presentation/screens/register_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:regina_app/presentation/providers/auth_controller_provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
-  void _login(BuildContext context, String username, String password) {
-    // ++++ logica del login ++++  //
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
 
-    const String validUsername = 'lucas@ort.com';
-    const String validPassword = 'lucas1234';
-    if (username == validUsername && password == validPassword) {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  Future<void> _login() async {
+    final currentContext = context;
+
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(currentContext).showSnackBar(
+        const SnackBar(content: Text('Por favor, complete todos los campos')),
+      );
+      return;
+    }
+
+    if (!_formKey.currentState!.validate()) return;
+
+    await ref
+        .read(authControllerProvider.notifier)
+        .login(emailController.text.trim(), passwordController.text.trim());
+
+    final state = ref.read(authControllerProvider);
+
+    if (!currentContext.mounted) return;
+
+    if (!state.hasError) {
       ScaffoldMessenger.of(
-        context,
+        currentContext,
       ).showSnackBar(const SnackBar(content: Text('¡Bienvenido!')));
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (currentContext.mounted) {
+          currentContext.go('/');
+        }
+      });
+    } else if (currentContext.mounted) {
+      ScaffoldMessenger.of(currentContext).showSnackBar(
+        const SnackBar(content: Text('Correo o contraseña incorrectos.')),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Usuario o contraseña incorrectos.')),
-      );
+      ScaffoldMessenger.of(
+        currentContext,
+      ).showSnackBar(SnackBar(content: Text(state.error.toString())));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(authControllerProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Iniciar sesión'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/regina_app_logo.png',
-              width: 350,
-              height: 350,
-            ),
-            const SizedBox(height: 32),
-            const TextField(
-              decoration: InputDecoration(labelText: 'Correo Electrónico'),
-            ),
-            const SizedBox(height: 16),
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Contraseña'),
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () => _login(context, 'lucas@ort.com', 'lucas1234'),
-              child: const Text("Iniciar sesión"),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("¿No tenés cuenta?"),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RegisterScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text("Crear cuenta"),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Image.asset(
+                'assets/images/regina_app_logo.png',
+                width: 350,
+                height: 300,
+              ),
+              const SizedBox(height: 32),
+              TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Correo Electrónico',
                 ),
-              ],
-            ),
-          ],
+                validator:
+                    (val) =>
+                        val == null || val.isEmpty ? 'Ingrese su correo' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Contraseña'),
+                validator:
+                    (val) =>
+                        val == null || val.length < 6
+                            ? 'Mínimo 6 caracteres'
+                            : null,
+              ),
+              const SizedBox(height: 32),
+              state.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ElevatedButton(
+                    onPressed: _login,
+                    child: const Text("Iniciar sesión"),
+                  ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("¿No tenés cuenta?"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RegisterScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text("Crear cuenta"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Página Principal")),
-      body: const Center(child: Text("Bienvenido a Regina App")),
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:regina_app/domain/service.dart';
 import 'package:regina_app/presentation/providers/service_provider.dart';
 
 class ServicesScreen extends ConsumerWidget {
-  ServicesScreen({super.key});
+  const ServicesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +24,7 @@ class ServicesScreen extends ConsumerWidget {
 }
 
 class _ServiceListView extends StatelessWidget {
-  const _ServiceListView({super.key, required this.services});
+  const _ServiceListView({required this.services});
 
   final List<Service> services;
 
@@ -42,7 +42,7 @@ class _ServiceListView extends StatelessWidget {
 }
 
 class _ServiceItemView extends StatelessWidget {
-  const _ServiceItemView({super.key, required this.service});
+  const _ServiceItemView({required this.service});
 
   final Service service;
 

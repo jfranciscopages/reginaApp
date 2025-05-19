@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:regina_app/domain/service.dart';
 import 'package:regina_app/presentation/providers/service_provider.dart';
 import 'package:regina_app/presentation/providers/slots_provider.dart';
 

@@ -3,7 +3,13 @@ import 'package:go_router/go_router.dart';
 
 class MainScaffold extends StatelessWidget {
   final Widget child;
-  const MainScaffold({super.key, required this.child});
+  final bool showCartButton;
+
+  const MainScaffold({
+    super.key,
+    required this.child,
+    this.showCartButton = false,
+  });
 
   static const tabs = ['/', '/products', '/services', '/login'];
 
@@ -15,6 +21,18 @@ class MainScaffold extends StatelessWidget {
     if (currentIndex == -1) currentIndex = 0;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Regina App'),
+        actions: [
+          if (showCartButton)
+            IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                context.push('/cart');  // Abre la pantalla carrito
+              },
+            ),
+        ],
+      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
