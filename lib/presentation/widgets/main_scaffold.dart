@@ -21,18 +21,7 @@ class MainScaffold extends StatelessWidget {
     if (currentIndex == -1) currentIndex = 0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Regina App'),
-        actions: [
-          if (showCartButton)
-            IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () {
-                context.push('/cart');  // Abre la pantalla carrito
-              },
-            ),
-        ],
-      ),
+      appBar: null,
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

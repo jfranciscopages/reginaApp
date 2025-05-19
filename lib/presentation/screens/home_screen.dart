@@ -18,34 +18,41 @@ class HomeScreen extends ConsumerWidget {
     final services = ref.watch(serviceProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Regina App'), centerTitle: true),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            Text('Que tengas un hermoso día ✨', style: textTheme.headlineSmall),
-            Image.asset(
-              'assets/images/regina_app_logo.png',
-              width: 200,
-              height: 200,
-            ),
-            const SizedBox(height: 20),
-            _SectionHeader(
-              title: 'Productos',
-              onTap: () => context.push('/products'),
-            ),
-            const SizedBox(height: 8),
-            _HorizontalProductList(products: products),
+      // appBar: AppBar(title: Text("Regina App"),),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView(
+            children: [
+              Center(
+                child: Text(
+                  'Que tengas un hermoso día ✨',
+                  style: textTheme.headlineSmall,
+                ),
+              ),
+              Image.asset(
+                'assets/images/regina_app_logo.png',
+                width: 200,
+                height: 200,
+              ),
+              const SizedBox(height: 20),
+              _SectionHeader(
+                title: 'Productos',
+                onTap: () => context.push('/products'),
+              ),
+              const SizedBox(height: 8),
+              _HorizontalProductList(products: products),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            _SectionHeader(
-              title: 'Servicios',
-              onTap: () => context.push('/services'),
-            ),
-            const SizedBox(height: 8),
-            _HorizontalServiceList(services: services),
-          ],
+              _SectionHeader(
+                title: 'Servicios',
+                onTap: () => context.push('/services'),
+              ),
+              const SizedBox(height: 8),
+              _HorizontalServiceList(services: services),
+            ],
+          ),
         ),
       ),
     );
@@ -144,17 +151,18 @@ class _SquareCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: imageUrl != null
-                  ? ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(12),
+              child:
+                  imageUrl != null
+                      ? ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        child: Image.network(imageUrl!, fit: BoxFit.cover),
+                      )
+                      : Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.image_not_supported, size: 40),
                       ),
-                      child: Image.network(imageUrl!, fit: BoxFit.cover),
-                    )
-                  : Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported, size: 40),
-                    ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
