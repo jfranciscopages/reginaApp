@@ -13,7 +13,7 @@ class ProductScreen extends ConsumerWidget {
     final products = ref.watch(productProvider);
     final cart = ref.watch(cartProvider); // <-- nuevo
 
-    Future.microtask(() => ref.read(productProvider.notifier).getAllProducts());
+   // Future.microtask(() => ref.read(productProvider.notifier).getAllProducts());
 
     return Scaffold(
       appBar: AppBar(

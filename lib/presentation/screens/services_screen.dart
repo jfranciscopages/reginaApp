@@ -11,7 +11,7 @@ class ServicesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final services = ref.watch(serviceProvider);
 
-  Future.microtask(() => ref.read(serviceProvider.notifier).getAllServices());
+ // Future.microtask(() => ref.read(serviceProvider.notifier).getAllServices());
 
     return Scaffold(
       appBar: AppBar(title: const Text('Servicios')),

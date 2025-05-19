@@ -11,6 +11,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Future.microtask(() => ref.read(productProvider.notifier).getAllProducts());
+    Future.microtask(() => ref.read(serviceProvider.notifier).getAllServices());
     final textTheme = Theme.of(context).textTheme;
     final products = ref.watch(productProvider);
     final services = ref.watch(serviceProvider);
