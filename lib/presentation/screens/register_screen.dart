@@ -64,6 +64,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
   }
 
+  String? validateName(String? value, String label) {
+    final nameRegExp = RegExp(r"^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{1,30}$");
+
+    if (value == null || value.trim().isEmpty) {
+      return 'Ingrese su $label';
+    } else if (!nameRegExp.hasMatch(value.trim())) {
+      return '$label inválido. Solo letras y máximo 30 caracteres.';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
@@ -80,19 +91,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               TextFormField(
                 controller: _firstNameController,
                 decoration: const InputDecoration(labelText: 'Nombre'),
-                validator:
-                    (val) =>
-                        val == null || val.isEmpty ? 'Ingrese su nombre' : null,
+                validator: (val) => validateName(val, 'Nombre'),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _lastNameController,
                 decoration: const InputDecoration(labelText: 'Apellido'),
-                validator:
-                    (val) =>
-                        val == null || val.isEmpty
-                            ? 'Ingrese su apellido'
-                            : null,
+                validator: (val) => validateName(val, 'Apellido'),
               ),
               const SizedBox(height: 16),
               TextFormField(

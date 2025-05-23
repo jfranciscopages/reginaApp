@@ -81,9 +81,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Correo Electrónico',
                 ),
-                validator:
-                    (val) =>
-                        val == null || val.isEmpty ? 'Ingrese su correo' : null,
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return 'Ingrese su correo';
+                  }
+                  final emailRegex = RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  );
+
+                  if (!emailRegex.hasMatch(val)) {
+                    return 'Ingrese un correo válido';
+                  }
+
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
