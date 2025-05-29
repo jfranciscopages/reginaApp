@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:regina_app/domain/product.dart';
+import 'package:regina_app/presentation/providers/auth_controller_provider.dart';
 import 'package:regina_app/presentation/providers/cart_provider.dart';
+import 'package:regina_app/presentation/providers/order_provider.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -10,13 +13,15 @@ class CartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cart = ref.watch(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
+  
     
 
     
     final total = ref.watch(cartProvider.notifier).total;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Carrito')),
+      appBar: AppBar(title: const Text('Carrito'),
+       ),
       body: Column(
         children: [
           Expanded(
@@ -36,7 +41,22 @@ class CartScreen extends ConsumerWidget {
                           );
                       },
                     ),
+                    
           ),
+
+          ElevatedButton(
+             onPressed: () {
+               final cart = ref.read(cartProvider);
+               if (cart.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                   const SnackBar(content: Text('El carrito está vacío.')),
+                   );
+                   return;
+                   }
+                   context.push('/confirm-order');
+                   },
+                   child: const Text('Comprar'),
+                   ),
 
           
           Padding(
