@@ -19,14 +19,14 @@ class HomeScreen extends ConsumerWidget {
     final services = ref.watch(serviceProvider);
     final userAsync = ref.watch(userProvider);
     final userNameAsync = ref.watch(userNameProvider);
-    final colorPrimary = Theme.of(context).colorScheme.primary;
 
     final saludo = userAsync.when(
       data: (user) {
         if (user != null && user.emailVerified) {
           return userNameAsync.when(
-            data: (nombre) =>
-                nombre != null ? '¡Hola, $nombre! 👋' : '¡Bienvenido! 👋',
+            data:
+                (nombre) =>
+                    nombre != null ? '¡Hola, $nombre! 👋' : '¡Bienvenido! 👋',
             loading: () => 'Cargando nombre...',
             error: (_, __) => '¡Bienvenido! 👋',
           );
@@ -44,10 +44,9 @@ class HomeScreen extends ConsumerWidget {
         children: [
           Text(
             saludo,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Center(
@@ -92,9 +91,10 @@ class _SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title,
-            style: textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
         TextButton(
           onPressed: onTap,
           style: TextButton.styleFrom(foregroundColor: color),
@@ -173,21 +173,21 @@ class _SquareCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: imageUrl != null
-                  ? Image.network(imageUrl!, fit: BoxFit.cover)
-                  : Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported, size: 40),
-                    ),
+              child:
+                  imageUrl != null
+                      ? Image.network(imageUrl!, fit: BoxFit.cover)
+                      : Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.image_not_supported, size: 40),
+                      ),
             ),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Text(
                 title,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
