@@ -23,4 +23,18 @@ class ServicesNotifier extends StateNotifier<List<Service>> {
     final snapshot = await query.get();
     state = snapshot.docs.map((d) => d.data()).toList();
   }
+
+  Future<Service?> getServiceById(String serviceId) async {
+    final doc =
+        await db
+            .collection('services')
+            .doc(serviceId)
+            .withConverter<Service>(
+              fromFirestore: Service.fromFirestore,
+              toFirestore: (service, _) => service.toFirestore(),
+            )
+            .get();
+
+    return doc.data();
+  }
 }

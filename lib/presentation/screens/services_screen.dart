@@ -5,7 +5,6 @@ import 'package:regina_app/domain/service.dart';
 import 'package:regina_app/presentation/providers/search_provider.dart';
 import 'package:regina_app/presentation/providers/service_provider.dart';
 import 'package:regina_app/presentation/providers/storage_provider.dart';
-import 'package:regina_app/presentation/widgets/appointment_icon_button.dart';
 
 class ServicesScreen extends ConsumerStatefulWidget {
   const ServicesScreen({super.key});
@@ -32,7 +31,6 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Servicios'),
-        actions: const [AppointmentIconButton()],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: Padding(

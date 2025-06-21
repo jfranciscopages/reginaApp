@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Appointment {
   final String id;
   final String userId;
-  final String serviceName;
+  final String serviceId;
   final DateTime date;
   final String status;
   final DateTime createdAt;
@@ -12,9 +12,9 @@ class Appointment {
   Appointment({
     required this.id,
     required this.userId,
-    required this.serviceName,
+    required this.serviceId,
     required this.date,
-    this.status = 'active',
+    this.status = 'activo',
     required this.createdAt,
     this.deletedAt,
   });
@@ -24,9 +24,9 @@ class Appointment {
     return Appointment(
       id: doc.id,
       userId: data['userId'],
-      serviceName: data['serviceName'],
+      serviceId: data['serviceId'],
       date: (data['date'] as Timestamp).toDate(),
-      status: data['status'] ?? 'active',
+      status: data['status'] ?? 'activo',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       deletedAt:
           data['deletedAt'] != null
@@ -38,7 +38,7 @@ class Appointment {
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
-      'serviceName': serviceName,
+      'serviceId': serviceId,
       'date': Timestamp.fromDate(date),
       'status': status,
       'createdAt': Timestamp.fromDate(createdAt),
@@ -49,7 +49,7 @@ class Appointment {
   Appointment copyWith({
     String? id,
     String? userId,
-    String? serviceName,
+    String? serviceId,
     DateTime? date,
     String? status,
     DateTime? createdAt,
@@ -58,7 +58,7 @@ class Appointment {
     return Appointment(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      serviceName: serviceName ?? this.serviceName,
+      serviceId: serviceId ?? this.serviceId,
       date: date ?? this.date,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,

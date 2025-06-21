@@ -127,7 +127,7 @@ class MainScaffold extends ConsumerWidget {
                     case '/services':
                       return const BottomNavigationBarItem(
                         icon: Icon(Icons.calendar_today),
-                        label: 'Turnos',
+                        label: 'Servicios',
                       );
                     case '/login':
                       return const BottomNavigationBarItem(

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:regina_app/presentation/providers/quantity_provider.dart';
+import 'package:regina_app/presentation/screens/appointment_detail_screen.dart';
 import 'package:regina_app/presentation/screens/home_screen.dart';
 import 'package:regina_app/presentation/screens/order_summary_screen.dart';
 import 'package:regina_app/presentation/screens/product_detail_screen.dart';
@@ -13,7 +14,6 @@ import 'package:regina_app/presentation/screens/services_screen.dart';
 import 'package:regina_app/presentation/screens/login_screen.dart';
 import 'package:regina_app/presentation/widgets/main_scaffold.dart';
 import 'package:regina_app/presentation/screens/cart_screen.dart';
-import 'package:regina_app/presentation/screens/appointments_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -72,9 +72,11 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const CartScreen(),
         ),
         GoRoute(
-          path: '/appointments',
-          name: 'appointments',
-          builder: (context, state) => const AppointmentsScreen(),
+          path: '/appointment_detail/:appointmentId',
+          name: 'appointment_detail',
+          builder: (context, state) => AppointmentDetailScreen(
+              appointmentId: state.pathParameters['appointmentId']!,
+          ),
         ),
         GoRoute(
           path: '/order-summary',

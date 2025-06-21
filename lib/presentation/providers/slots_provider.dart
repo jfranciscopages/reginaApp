@@ -11,10 +11,10 @@ final slotsProvider = StateNotifierProvider.family<
 >((ref, serviceId) => SlotsNotifier(serviceId));
 
 class SlotsNotifier extends StateNotifier<AsyncValue<List<DateTime>>> {
-  final String serviceName;
+  final String serviceId;
   StreamSubscription? _subscription;
 
-  SlotsNotifier(this.serviceName) : super(const AsyncValue.loading()) {
+  SlotsNotifier(this.serviceId) : super(const AsyncValue.loading()) {
     _listenToSlots();
   }
 
@@ -22,8 +22,8 @@ class SlotsNotifier extends StateNotifier<AsyncValue<List<DateTime>>> {
     try {
       _subscription = FirebaseFirestore.instance
           .collection('appointments')
-          .where('serviceName', isEqualTo: serviceName)
-          .where('status', isEqualTo: 'active')
+          .where('serviceId', isEqualTo: serviceId)
+          .where('status', isEqualTo: 'activo')
           .snapshots()
           .listen(
             (snapshot) {
@@ -34,7 +34,7 @@ class SlotsNotifier extends StateNotifier<AsyncValue<List<DateTime>>> {
 
               final now = DateTime.now();
               final List<DateTime> slots = [];
-              for (int i = 0; i < 7; i++) {
+              for (int i = 0; i < 21; i++) {
                 final day = now.add(Duration(days: i));
                 for (int hour = 9; hour <= 17; hour += 2) {
                   final slot = DateTime(day.year, day.month, day.day, hour);

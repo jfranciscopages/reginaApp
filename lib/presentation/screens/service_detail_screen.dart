@@ -84,7 +84,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     final appointment = Appointment(
       id: '',
       userId: user.uid,
-      serviceName: service.name,
+      serviceId: service.id,
       date: _selectedSlot!,
       createdAt: DateTime.now(),
       deletedAt: null,
@@ -93,6 +93,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     try {
       final notifier = ref.read(appointmentProvider.notifier);
       await notifier.add(appointment);
+      final confirmSlot = _selectedSlot!;
 
       if (!mounted) return;
       showDialog(
@@ -101,11 +102,16 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
             (_) => AlertDialog(
               title: const Text('Reserva confirmada'),
               content: Text(
-                'Turno reservado para el ${DateFormat('EEEE d MMMM', 'es').format(_selectedSlot!)} a las ${DateFormat('HH:mm').format(_selectedSlot!)}.',
+                'Turno reservado para el ${DateFormat('EEEE d MMMM', 'es').format(confirmSlot)} a las ${DateFormat('HH:mm').format(confirmSlot)}.',
               ),
               actions: [
                 TextButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () {
+                    context.pop();
+                    setState(() {
+                      _selectedSlot = null;
+                    });
+                  },
                   child: const Text('Aceptar'),
                 ),
               ],
@@ -135,7 +141,7 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
     final textTheme = Theme.of(context).textTheme;
     final services = ref.watch(serviceProvider);
     final service = services.firstWhere((s) => s.id == widget.serviceId);
-    final slotsAsync = ref.watch(slotsProvider(service.name));
+    final slotsAsync = ref.watch(slotsProvider(service.id));
     final imageAsync = ref.watch(
       imagePathProvider(('services', service.imagePath ?? '')),
     );
@@ -147,23 +153,32 @@ class _ServiceDetailScreenState extends ConsumerState<ServiceDetailScreen> {
         child: Column(
           children: [
             imageAsync.when(
-              data: (url) => ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(url, height: 180, fit: BoxFit.cover),
-              ),
-              loading: () => const SizedBox(
-                height: 180,
-                child: Center(child: CircularProgressIndicator()),
-              ),
-              error: (_, __) => const SizedBox(
-                height: 180,
-                child: Icon(Icons.image_not_supported),
-              ),
+              data:
+                  (url) => ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(url, height: 180, fit: BoxFit.cover),
+                  ),
+              loading:
+                  () => const SizedBox(
+                    height: 180,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+              error:
+                  (_, __) => const SizedBox(
+                    height: 180,
+                    child: Icon(Icons.image_not_supported),
+                  ),
             ),
             const SizedBox(height: 12),
             Text(service.name, style: textTheme.titleLarge),
+            const SizedBox(height: 12),
             Text(service.description, style: textTheme.bodyMedium),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
+            Text(
+              '\$${service.price.toStringAsFixed(2)}',
+              style: textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 10),
 
             // CALENDARIO
             TableCalendar(
