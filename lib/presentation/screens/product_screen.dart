@@ -40,49 +40,55 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Productos'),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        title: const Text(
+          'Productos',
+          style: TextStyle(
+            fontFamily: 'PlayfairDisplay',
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF007AFF),
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(searchByName ? Icons.description : Icons.text_fields),
-            tooltip:
-                searchByName ? 'Buscar por descripción' : 'Buscar por nombre',
+            tooltip: searchByName ? 'Buscar por descripción' : 'Buscar por nombre',
             onPressed: () {
               ref.read(searchByNameProvider.notifier).state = !searchByName;
             },
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
+          preferredSize: const Size.fromHeight(60),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextField(
               style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
-                hintText:
-                    searchByName
-                        ? 'Buscar por nombre...'
-                        : 'Buscar por descripción...',
-                hintStyle: const TextStyle(
-                  color: Color.fromARGB(255, 100, 100, 100),
-                ),
+                hintText: searchByName
+                    ? 'Buscar por nombre...'
+                    : 'Buscar por descripción...',
+                hintStyle: const TextStyle(color: Colors.grey),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
                 ),
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
               ),
-              onChanged:
-                  (value) =>
-                      ref.read(searchQueryProvider.notifier).state = value,
+              onChanged: (value) =>
+                  ref.read(searchQueryProvider.notifier).state = value,
             ),
           ),
         ),
       ),
-      body:
-          products.isEmpty
-              ? const Center(child: CircularProgressIndicator())
-              : _ProductListView(products: filteredProducts),
+      body: products.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : _ProductListView(products: filteredProducts),
     );
   }
 }
@@ -119,78 +125,83 @@ class _ProductItemView extends ConsumerWidget {
     );
 
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
+        contentPadding: const EdgeInsets.all(12),
         onTap: () => context.push('/product_detail/${product.id}'),
         leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           child: imageAsync.when(
-            data:
-                (url) => Image.network(
-                  url,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-            loading:
-                () => const SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-            error:
-                (_, __) => const SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: Icon(Icons.list_alt_rounded),
-                ),
+            data: (url) => Image.network(
+              url,
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+            ),
+            loading: () => const SizedBox(
+              width: 60,
+              height: 60,
+              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            ),
+            error: (_, __) => const SizedBox(
+              width: 60,
+              height: 60,
+              child: Icon(Icons.image_not_supported),
+            ),
           ),
         ),
-        title: Text(product.name),
-        subtitle: Text(product.description),
-        trailing:
-            quantity == 0
-                ? IconButton(
-                  icon: const Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    ref.read(quantityProvider.notifier).increment(product.id);
-                    cartNotifier.addToCart(product, quantity: 1);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${product.name} agregado al carrito'),
-                      ),
-                    );
-                  },
-                )
-                : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle_outline),
-                      onPressed: () {
-                        if (quantity == 1) {
-                          ref.read(quantityProvider.notifier).reset(product.id);
-                        } else {
-                          ref
-                              .read(quantityProvider.notifier)
-                              .decrement(product.id);
-                        }
-                        cartNotifier.removeOneFromCart(product);
-                      },
-                    ),
-                    Text('$quantity'),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle_outline),
-                      onPressed: () {
-                        ref
-                            .read(quantityProvider.notifier)
-                            .increment(product.id);
-                        cartNotifier.addToCart(product, quantity: 1);
-                      },
-                    ),
-                  ],
-                ),
+        title: Text(
+          product.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          product.description,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: quantity == 0
+            ? IconButton(
+                icon: const Icon(Icons.add_circle_outline),
+                color: Color(0xFF007AFF),
+                onPressed: () {
+                  ref.read(quantityProvider.notifier).increment(product.id);
+                  cartNotifier.addToCart(product, quantity: 1);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${product.name} agregado al carrito')),
+                  );
+                },
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    color: Colors.red.shade400,
+                    onPressed: () {
+                      if (quantity == 1) {
+                        ref.read(quantityProvider.notifier).reset(product.id);
+                      } else {
+                        ref.read(quantityProvider.notifier).decrement(product.id);
+                      }
+                      cartNotifier.removeOneFromCart(product);
+                    },
+                  ),
+                  Text(
+                    '$quantity',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle_outline),
+                    color: Color(0xFF007AFF),
+                    onPressed: () {
+                      ref.read(quantityProvider.notifier).increment(product.id);
+                      cartNotifier.addToCart(product, quantity: 1);
+                    },
+                  ),
+                ],
+              ),
       ),
     );
   }

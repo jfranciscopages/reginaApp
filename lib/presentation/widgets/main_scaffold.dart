@@ -23,11 +23,9 @@ class MainScaffold extends ConsumerWidget {
       data: (user) {
         final userLoggedIn = user != null;
 
-        final tabs =
-            userLoggedIn
-                ? allTabs.where((tab) => tab != '/login').toList() +
-                    ['/profile']
-                : allTabs;
+        final tabs = userLoggedIn
+            ? allTabs.where((tab) => tab != '/login').toList() + ['/profile']
+            : allTabs;
 
         final String location = GoRouterState.of(context).uri.toString();
         int currentIndex = tabs.indexWhere((t) => location == t);
@@ -35,117 +33,116 @@ class MainScaffold extends ConsumerWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            centerTitle: false,
+            title: Text(
+              'Regina App',
+              style: TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 26,
+                fontWeight: FontWeight.w600,
                 color: primaryColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                'Regina App',
-                style: TextStyle(
-                  fontFamily: 'Georgia',
-                  fontSize: 29,
-                  letterSpacing: 1.1,
-                  fontStyle: FontStyle.italic,
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.white,
-                  shadows: const [
-                    Shadow(
-                      offset: Offset(0, 1.5),
-                      blurRadius: 2,
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
+                letterSpacing: 1.2,
               ),
             ),
-
-            centerTitle: true,
             actions: [
               ThemeToggleButton(),
+              const SizedBox(width: 8),
               const CartIconButton(),
               if (userLoggedIn)
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  tooltip: 'Cerrar sesión',
-                  onPressed: () async {
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('¿Cerrar sesión?'),
-                            content: const Text(
-                              '¿Estás seguro de que querés cerrar sesión?',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed:
-                                    () => Navigator.of(context).pop(false),
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed:
-                                    () => Navigator.of(context).pop(true),
-                                child: const Text('Cerrar sesión'),
-                              ),
-                            ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: IconButton(
+                    icon: const Icon(Icons.logout),
+                    tooltip: 'Cerrar sesión',
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                    );
+                          title: const Text('¿Cerrar sesión?'),
+                          content: const Text(
+                            '¿Estás seguro de que querés cerrar sesión?',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Cancelar'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Cerrar sesión'),
+                            ),
+                          ],
+                        ),
+                      );
 
-                    if (confirmed == true) {
-                      await ref.read(authControllerProvider.notifier).logout();
-                      ref.invalidate(appointmentProvider);
-                      context.go('/login');
-                    }
-                  },
+                      if (confirmed == true) {
+                        await ref.read(authControllerProvider.notifier).logout();
+                        ref.invalidate(appointmentProvider);
+                        context.go('/login');
+                      }
+                    },
+                  ),
                 ),
             ],
           ),
           body: child,
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: currentIndex,
-            selectedItemColor: primaryColor,
-            unselectedItemColor: Colors.grey,
-            onTap: (index) => context.go(tabs[index]),
-            items:
-                tabs.map((tab) {
-                  switch (tab) {
-                    case '/':
-                      return const BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Inicio',
-                      );
-                    case '/products':
-                      return const BottomNavigationBarItem(
-                        icon: Icon(Icons.shopping_bag),
-                        label: 'Productos',
-                      );
-                    case '/services':
-                      return const BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_today),
-                        label: 'Servicios',
-                      );
-                    case '/login':
-                      return const BottomNavigationBarItem(
-                        icon: Icon(Icons.account_circle_rounded),
-                        label: 'Ingresar',
-                      );
-                    case '/profile':
-                      return const BottomNavigationBarItem(
-                        icon: Icon(Icons.account_circle),
-                        label: 'Perfil',
-                      );
-                    default:
-                      return const BottomNavigationBarItem(
-                        icon: Icon(Icons.error),
-                        label: 'Error',
-                      );
-                  }
-                }).toList(),
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, -1),
+                ),
+              ],
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: currentIndex,
+              selectedItemColor: primaryColor,
+              unselectedItemColor: Colors.grey.shade500,
+              onTap: (index) => context.go(tabs[index]),
+              items: tabs.map((tab) {
+                switch (tab) {
+                  case '/':
+                    return const BottomNavigationBarItem(
+                      icon: Icon(Icons.home_outlined),
+                      label: 'Inicio',
+                    );
+                  case '/products':
+                    return const BottomNavigationBarItem(
+                      icon: Icon(Icons.shopping_bag_outlined),
+                      label: 'Productos',
+                    );
+                  case '/services':
+                    return const BottomNavigationBarItem(
+                      icon: Icon(Icons.calendar_today_outlined),
+                      label: 'Servicios',
+                    );
+                  case '/login':
+                    return const BottomNavigationBarItem(
+                      icon: Icon(Icons.person_outline),
+                      label: 'Ingresar',
+                    );
+                  case '/profile':
+                    return const BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Perfil',
+                    );
+                  default:
+                    return const BottomNavigationBarItem(
+                      icon: Icon(Icons.error_outline),
+                      label: 'Error',
+                    );
+                }
+              }).toList(),
+            ),
           ),
         );
       },
