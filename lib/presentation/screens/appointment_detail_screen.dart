@@ -112,42 +112,46 @@ class AppointmentDetailScreen extends ConsumerWidget {
                       ),
                       Text('Hora: ${DateFormat('HH:mm').format(appt.date)}'),
                       const SizedBox(height: 32),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.cancel),
-                        label: const Text('Cancelar turno'),
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder:
-                                (context) => AlertDialog(
-                                  title: const Text('Cancelar turno'),
-                                  content: const Text(
-                                    '¿Estás seguro de que querés cancelar este turno?',
+                      if (appt.status == 'activo') ...[
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.cancel),
+                          label: const Text('Cancelar turno'),
+                          onPressed: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder:
+                                  (context) => AlertDialog(
+                                    title: const Text('Cancelar turno'),
+                                    content: const Text(
+                                      '¿Estás seguro de que querés cancelar este turno?',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed:
+                                            () => Navigator.of(
+                                              context,
+                                            ).pop(false),
+                                        child: const Text('No'),
+                                      ),
+                                      TextButton(
+                                        onPressed:
+                                            () =>
+                                                Navigator.of(context).pop(true),
+                                        child: const Text('Sí, cancelar'),
+                                      ),
+                                    ],
                                   ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed:
-                                          () =>
-                                              Navigator.of(context).pop(false),
-                                      child: const Text('No'),
-                                    ),
-                                    TextButton(
-                                      onPressed:
-                                          () => Navigator.of(context).pop(true),
-                                      child: const Text('Sí, cancelar'),
-                                    ),
-                                  ],
-                                ),
-                          );
+                            );
 
-                          if (confirm == true) {
-                            context.pop();
-                            await ref
-                                .read(userAppointmentsProvider.notifier)
-                                .cancelAppointment(appt.id);
-                          }
-                        },
-                      ),
+                            if (confirm == true) {
+                              context.pop();
+                              await ref
+                                  .read(userAppointmentsProvider.notifier)
+                                  .cancelAppointment(appt.id);
+                            }
+                          },
+                        ),
+                      ],
                     ],
                   ),
                 );

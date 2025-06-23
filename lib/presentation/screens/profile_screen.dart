@@ -228,20 +228,19 @@ class appointmentCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Orden #${appointment.id}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
                     const SizedBox(height: 8),
                     if (snapshot.connectionState == ConnectionState.waiting)
                       const Text('Cargando servicio...')
                     else if (service == null)
                       const Text('Servicio no encontrado')
                     else ...[
-                      Text(service.name),
+                      Text(service.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ],
                     const SizedBox(height: 8),
                     Text('Estado: ${appointment.status}'),
+                    const SizedBox(height: 4),
                     Text(
                       'Fecha: ${appointment.date.toLocal().toString().split(' ').first}',
                     ),

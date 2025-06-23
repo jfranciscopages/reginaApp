@@ -128,12 +128,15 @@ class ProductDetailScreen extends ConsumerWidget {
                     SnackBar(
                       content: Text('${product.name} agregado al carrito'),
                       backgroundColor: primaryColor,
+
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
                 },
-                icon: const Icon(Icons.add_shopping_cart),
-                label: const Text('Agregar al carrito'),
+                icon: const Icon(Icons.add_shopping_cart, color: Colors.white),
+                label: const Text('Agregar al carrito',
+                style: TextStyle(color: Colors.white)
+                ),
               ),
             ),
             const SizedBox(height: 24),

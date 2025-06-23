@@ -19,8 +19,7 @@ class UserAppointmentsNotifier extends StateNotifier<AsyncValue<List<Appointment
       final snapshot = await FirebaseFirestore.instance
           .collection('appointments')
           .where('userId', isEqualTo: user.uid)
-          .where('status', isEqualTo: 'activo')
-          .orderBy('date', descending: false)
+          .orderBy('createdAt', descending: true)
           .get();
 
       final appointments = snapshot.docs

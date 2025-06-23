@@ -22,7 +22,6 @@ class SlotsNotifier extends StateNotifier<AsyncValue<List<DateTime>>> {
     try {
       _subscription = FirebaseFirestore.instance
           .collection('appointments')
-          .where('serviceId', isEqualTo: serviceId)
           .where('status', isEqualTo: 'activo')
           .snapshots()
           .listen(
